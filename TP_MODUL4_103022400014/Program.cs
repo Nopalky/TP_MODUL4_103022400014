@@ -81,7 +81,15 @@ public class main {
 
         DoorMachine machine = new DoorMachine();
 
+        Console.WriteLine("State awal: Pintu terkunci");
+        machine.activateTrigger(DoorMachine.Trigger.KunciPintu);
+        Console.WriteLine("State setelah mengunci trigger buka pintu, maka");
         machine.activateTrigger(DoorMachine.Trigger.BukaPintu);  
+        Console.WriteLine("State menengah: Pintu Terbuka");
+        machine.activateTrigger(DoorMachine.Trigger.BukaPintu);
+        Console.WriteLine("State setelah membuka trigger mengunci, maka");
+        machine.activateTrigger(DoorMachine.Trigger.KunciPintu);
+        Console.WriteLine("State terakhir: pintu terkunci kembali");
         machine.activateTrigger(DoorMachine.Trigger.KunciPintu);
     }
 }

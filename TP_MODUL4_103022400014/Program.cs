@@ -6,13 +6,67 @@ public class KodePos {
         return kodePos[(int)keluarahan];
     }
 }
+
+public class DoorMachine
+{
+    public enum DoorState { Terkunci, Terbuka };
+    public enum Trigger { KunciPintu, BukaPintu }
+    class transition
+    {
+        public DoorState prevState;
+        public DoorState nextState;
+        public Trigger trigger;
+        public transition(DoorState currentState, DoorState nextState, Trigger trigger)
+        {
+            this.prevState = currentState;
+            this.nextState = nextState;
+            this.trigger = trigger;
+        }
+    }
+
+    transition[] transitions = {
+         new transition(DoorState.Terkunci, DoorState.Terbuka, Trigger.BukaPintu),
+         new transition(DoorState.Terbuka, DoorState.Terkunci, Trigger.KunciPintu), 
+         new transition(DoorState.Terkunci, DoorState.Terkunci, Trigger.KunciPintu),
+         new transition(DoorState.Terbuka, DoorState.Terbuka, Trigger.BukaPintu)};
+
+    public DoorState currentState;
+    public DoorMachine()
+    {
+        currentState = DoorState.Terkunci;
+    }
+    public DoorState getNextState(DoorState prevState, Trigger trigger)
+    {
+        for (int i = 0; i < transitions.Length; i++)
+        {
+            if (transitions[i].prevState == prevState && transitions[i].trigger == trigger)
+            {
+                return transitions[i].nextState;
+            }
+        }
+        return prevState;
+    }
+
+    public void activateTrigger(Trigger trigger)
+    {
+        currentState = getNextState(currentState, trigger);
+
+        if (currentState == DoorState.Terkunci)
+        {
+            Console.WriteLine("Pintu terkunci");
+        }
+        else
+        {
+            Console.WriteLine("Pintu tidak terkunci");
+        }
+    }
+}
+
 public class main {
     static void Main() {
 
         string[] keluarahanNames = Enum.GetNames(typeof(KodePos.Keluarahan));
-
         Console.WriteLine("Daftar Keluarahan Beserta Kode Pos");
-
         for (int i = 0; i < keluarahanNames.Length; i++)
         {
             KodePos.Keluarahan kel = (KodePos.Keluarahan)Enum.Parse(typeof(KodePos.Keluarahan), keluarahanNames[i]);
@@ -21,5 +75,13 @@ public class main {
 
             Console.WriteLine("Kelurahan: {0} | Kode Pos: {1}", kel, kodepos);
         }
+
+        Console.WriteLine("=======================================");
+        Console.WriteLine("Contoh Penggunaan DoorMachine: ");
+
+        DoorMachine machine = new DoorMachine();
+
+        machine.activateTrigger(DoorMachine.Trigger.BukaPintu);  
+        machine.activateTrigger(DoorMachine.Trigger.KunciPintu);
     }
 }
